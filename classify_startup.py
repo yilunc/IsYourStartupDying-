@@ -92,4 +92,4 @@ ref_data, country_weights, city_weights, market_weights = init.parseData('data.c
 print([c.getName() for c in ref_data[:10]])
 print(country_weights.values()[:10], country_weights['USA'])
 print(market_weights.values()[:10])
-print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 120, 1), 3, ref_data, country_weights, city_weights, market_weights)))
+print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 120, 1, 1), 3, ref_data, country_weights, city_weights, market_weights)))

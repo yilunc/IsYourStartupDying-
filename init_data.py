@@ -1,4 +1,5 @@
 import csv
+import datetime
 from Company import Company
 
 #self, name, status, market, country, city, funding_value, funding_rounds):
@@ -20,10 +21,18 @@ def parseData(csvfile):
         market_weights = {}
 
         for line in data_reader:
-            if(int(line[2]) > 50000):
+            if(int(line[2]) > 50000 and (line[8] != '' and line[9] != '')):
                 if(int(line[2]) > 100000):
+                    if (not line[8] or line[8] == ''):
+                        d1 = datetime.date(int(line[9][:4]), int(line[9][5:7]), int(line[9][8:10]))
+                    else:
+                        d1 = datetime.date(int(line[8][:4]), int(line[8][5:7]), int(line[8][8:10]))
 
-                    comp_arr.append(Company(line[0], line[3], line[1], line[4], line[6], line[2], line[7], funding_per_date))
+                    d2 = datetime.date(int(line[10][:4]), int(line[10][5:7]), int(line[10][8:10]))
+
+                    delta = d2 - d1
+
+                    comp_arr.append(Company(line[0], line[3], line[1], line[4], line[6], line[2], line[7], delta.days))
 
                 ## Country map
                 if (line[4] in country_totals):
