@@ -28,6 +28,7 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
     sorted_keys.sort()
 
     nearest_neighbors = []
+
     index = 0
     while (index < k):
         num_added = 0
@@ -37,7 +38,14 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
             if(num_added + index >= k):
                 break
         index += num_added
-    print([c.getName() for c in nearest_neighbors])
+
+    for neighbour in nearest_neighbors:
+        print
+        print(neighbour.getName())
+        print(neighbour.getFunding_value())
+        print(neighbour.getFunding_rounds())
+        print(neighbour.getStatus())
+        print
     return nearest_neighbors
 
 ## list:neighbors
