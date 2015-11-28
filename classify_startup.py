@@ -15,8 +15,8 @@ def get_k_neighbors(company, k, data, country_weights, market_weights):
     distances = {}
     for ref_company in data:
         distance = get_n_distance((company.getFunding_value(), company.getFunding_rounds()),(ref_company.getFunding_value(), ref_company.getFunding_rounds()))
-        distance *= country_weights[company.getCountry()]
-        distance *= market_weights[company.getMarket()]
+        distance *= country_weights[ref_company.getCountry()]
+        distance *= market_weights[ref_company.getMarket()]
 
         if (distance in distances):
             distances[distance].append(ref_company)
@@ -28,9 +28,10 @@ def get_k_neighbors(company, k, data, country_weights, market_weights):
     sorted_keys.sort()
 
     nearest_neighbors = []
-    for i in range(k):
-        for company in distances[sorted_keys[i]]:
+    while (k > 0):
+        for company in distances[sorted_keys[-k]]:
             nearest_neighbors.append(company)
+        k -= len(distances[sorted_keys[-k]])
 
     return nearest_neighbors
 
@@ -40,7 +41,7 @@ def get_majority(neighbors):
     print("    Getting majority")
     numA = 0
     numB = 0
-    categoryA = ('ipo', 'aquired')
+    categoryA = ('ipo', 'acquired')
 
     for neighbor in neighbors:
         if neighbor.getStatus() in categoryA:
@@ -50,7 +51,7 @@ def get_majority(neighbors):
 
     diff = numA - numB
 
-    if (abs(diff) < 3):
+    if (abs(diff) < 1):
         return -1
     elif (diff > 0):
         return 1
@@ -61,7 +62,6 @@ ref_data, country_weights, market_weights = init.parseData('data.csv')
 
 ## main
 print([c.getName() for c in ref_data[:10]])
-print(country_weights.values()[:10])
+print(country_weights.values()[:10], country_weights['USA'])
 print(market_weights.values()[:10])
-print()
-print(get_majority(get_k_neighbors(Company("hello", "" , "Crowdsourcing", "USA", 12341212212123, 1), 11, ref_data, country_weights, market_weights)))
+print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", 162000000, 3), 5, ref_data, country_weights, market_weights)))
