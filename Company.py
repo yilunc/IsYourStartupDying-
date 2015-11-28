@@ -30,3 +30,6 @@ class Company(object):
     def getFunding_rounds(self):
         return self._funding_rounds;
 
+    def getFunding_per_date(self):
+        return self._funding_per_date;
+

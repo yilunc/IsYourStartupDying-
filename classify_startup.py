@@ -60,6 +60,7 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
         print(neighbour.getFunding_value())
         print(neighbour.getFunding_rounds())
         print(neighbour.getStatus())
+        print(neighbour.
         print
     return nearest_neighbors
 
