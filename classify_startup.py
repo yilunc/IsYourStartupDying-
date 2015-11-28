@@ -15,31 +15,26 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
     distances = {}
     for ref_company in data:
         distance = get_n_distance((company.getFunding_value(), company.getFunding_rounds()),(ref_company.getFunding_value(), ref_company.getFunding_rounds()))
-        print(distance)
         distance *= country_weights[ref_company.getCountry()]
-        print(distance)
         distance *= city_weights[ref_company.getCity()]
-        print(distance)
         distance *= market_weights[ref_company.getMarket()]
-        print(distance)
 
         if (distance in distances):
             distances[distance].append(ref_company)
         else:
             distances[distance] = [ref_company]
 
-    ##TODO find python sorting alg
     sorted_keys = distances.keys()
     sorted_keys.sort()
 
     nearest_neighbors = []
-    print()
-    print(len(distances))
-    print()
-    while (k > 0):
-        for company in distances[sorted_keys[-k]]:
+
+    index = 0
+    while (index < k):
+        for company in distances[sorted_keys[index]]:
             nearest_neighbors.append(company)
-        k -= len(distances[sorted_keys[-k]])
+        index += len(distances[sorted_keys[index]])
+
 
     return nearest_neighbors
 
@@ -70,7 +65,6 @@ ref_data, country_weights, city_weights, market_weights = init.parseData('data.c
 
 ## main
 print([c.getName() for c in ref_data[:10]])
-print(country_weights.values()[:10])
+print(country_weights.values()[:10], country_weights['USA'])
 print(market_weights.values()[:10])
-print()
-print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 162000000, 3), 10000, ref_data, country_weights, city_weights, market_weights)))
+print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 162000000, 3), 5, ref_data, country_weights, city_weights, market_weights)))

@@ -14,8 +14,6 @@ def parseData(csvfile):
         country_weights = {}
         city_weights = {}
         market_weights = {}
-        
-        num = 0
 
         for line in data_reader:
             #print(line[2])
@@ -60,6 +58,7 @@ def parseData(csvfile):
 
         for country in country_totals:
             if (country_totals[country][0] > 0):
+
                 country_weights[country] = float(country_totals[country][1])/float(country_totals[country][0]) * 10
             else:
                 country_weights[country] = 2
@@ -79,11 +78,27 @@ def parseData(csvfile):
             else:
                 market_weights[market] = 2
 
+                country_weights[country] = float(country_totals[country][1])/float(country_totals[country][0]) + 0.5
+            else:
+                country_weights[country] = 2
+
+        for city in city_totals:
+            if (city_totals[city][0] > 0):
+                city_weights[city] = float(city_totals[city][1])/float(city_totals[city][0]) * 10
+            else:
+                city_weights[city] = 2
+
+
+        for market in market_totals:
+            if (float(market_totals[market][0]) > 0):
+                market_weights[market] = float(market_totals[market][1])/float(market_totals[market][0]) * 10
+            else:
+                market_weights[market] = 2
 
     return comp_arr, country_weights, city_weights, market_weights
 
 def company_success(status):
-    if (status in ('ipo', 'aquired')):
+    if (status in ('ipo', 'acquired')):
         return True
     return False
 
