@@ -22,8 +22,10 @@ def parseData_array(csvfile):
                 else:
                     country_totals[line[4]] = [0,1]
 
+##TODO: MAKE TOTALS INTO WEIGHTS
+### DO WEIGHTS FOR MARKET
 
-    return comp_arr ,
+    return comp_arr, country_totals
 
 def countryWeight():
 
