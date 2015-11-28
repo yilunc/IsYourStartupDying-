@@ -15,9 +15,9 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
     distances = {}
     for ref_company in data:
         distance = get_n_distance((company.getFunding_value(), company.getFunding_rounds()),(ref_company.getFunding_value(), ref_company.getFunding_rounds()))
-        distance *= country_weights[ref_company.getCountry()]
-        distance *= city_weights[ref_company.getCity()]
-        distance *= market_weights[ref_company.getMarket()]
+        distance *= country_weights[company.getCountry()]
+        distance *= city_weights[company.getCity()]
+        distance *= market_weights[company.getMarket()]
 
         if (distance in distances):
             distances[distance].append(ref_company)
@@ -35,7 +35,13 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
             nearest_neighbors.append(company)
         index += len(distances[sorted_keys[index]])
 
-
+    for neighbour in nearest_neighbors:
+        print()
+        print(neighbour.getName())
+        print(neighbour.getFunding_value())
+        print(neighbour.getFunding_rounds())
+        print(neighbour.getStatus())
+        print()
     return nearest_neighbors
 
 ## list:neighbors
@@ -44,7 +50,7 @@ def get_majority(neighbors):
     print("    Getting majority")
     numA = 0
     numB = 0
-    categoryA = ('ipo', 'acquired')
+    categoryA = ('ipo', 'acquired', 'operating')
 
     for neighbor in neighbors:
         if neighbor.getStatus() in categoryA:
@@ -67,4 +73,4 @@ ref_data, country_weights, city_weights, market_weights = init.parseData('data.c
 print([c.getName() for c in ref_data[:10]])
 print(country_weights.values()[:10], country_weights['USA'])
 print(market_weights.values()[:10])
-print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 162000000, 3), 5, ref_data, country_weights, city_weights, market_weights)))
+print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 120, 3), 6, ref_data, country_weights, city_weights, market_weights)))

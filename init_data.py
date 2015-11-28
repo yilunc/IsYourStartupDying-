@@ -2,6 +2,10 @@ import csv
 from Company import Company
 
 #self, name, status, market, country, city, funding_value, funding_rounds):
+##TODO:
+### Take the percentage closed vs. operating/acquired/ipo for values 50,000 - 100,000
+#### Take how much funding they got per day for everyone > 100,000
+##### 
 def parseData(csvfile):
     with open(csvfile, 'rb') as data_file:
         next(data_file)
@@ -17,8 +21,12 @@ def parseData(csvfile):
 
         for line in data_reader:
             #print(line[2])
-            if(line[2] > 0):
-                comp_arr.append(Company(line[0], line[3], line[1], line[4], line[6], line[2], line[7]))
+            
+            if(int(line[2]) > 50000):
+
+                if(int(line[2]) > 100000):
+                    comp_arr.append(Company(line[0], line[3], line[1], line[4], line[6], line[2], line[7]))
+
                 ## Country map
                 if (line[4] in country_totals):
                     if (company_success(line[3])):
