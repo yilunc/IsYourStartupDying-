@@ -1,4 +1,4 @@
-class Company: 
+class Company:
     def __init__(self, name, status, market, country, funding_value, funding_rounds):
 
         self._name = name;

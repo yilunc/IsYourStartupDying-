@@ -1,15 +1,18 @@
 import init_data
 import company
 
-##list of integers:*points1, *points2
-def get_n_distance(*points1, *points2):
+##list of integers:points1, points2
+def get_n_distance(points1, points2):
     sum = 0
     for index in range(len(points1)):
         sum += (points1[index]-points2[index])**2
     return math.sqrt(sum)
 
 ## Company:company
-def get_k_neighbors(company):
+def get_k_neighbors(company, data):
+    distances = []
+    for ref_company in data:
+        distances.append(get_n_distance((company.),()))
 
 ## list:neighbors
 def get_majority(neighbors):
@@ -26,5 +29,10 @@ def get_majority(neighbors):
     return 0
 
 
-ref_data = init_data.parseData('data.csv')
+ref_data, market_weights, country_weights = init_data.parseData('data.csv')
 
+while(True):
+    ## get input
+
+
+{'USA':[24, 213]}

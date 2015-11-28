@@ -1,2 +1,2 @@
-class Graph: 
-    
+class Graph:
+

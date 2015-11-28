@@ -8,5 +8,4 @@ def parseData_array(csvfile):
         row = 0
         for line in data_reader:
             comp_arr[row] = Company(line[0], line[3], line[1], line[4], line[2], line[7])
-
     return comp_arr
