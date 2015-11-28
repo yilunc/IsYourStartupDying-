@@ -1,9 +1,10 @@
 class Company(object):
-    def __init__(self, name, status, market, country, funding_value, funding_rounds):
+    def __init__(self, name, status, market, country, city, funding_value, funding_rounds):
         self._name = name;
         self._status = status;
         self._market = market;
         self._country = country;
+        self._city = city;
         self._funding_value = int(funding_value);
         self._funding_rounds = int(funding_rounds);
 
@@ -18,6 +19,9 @@ class Company(object):
 
     def getCountry(self):
         return self._country;
+
+    def getCity(self):
+        return self._city;
 
     def getFunding_value(self):
         return self._funding_value;
