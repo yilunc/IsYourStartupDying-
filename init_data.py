@@ -58,26 +58,26 @@ def parseData(csvfile):
                         city_totals[line[6]] = [0,1]
 
 
-            for country in country_totals:
-                if (country_totals[country][0] > 0):
-                    country_weights[country] = float(country_totals[country][1])/float(country_totals[country][0]) * 10
-                else:
-                    country_weights[country] = 2
+        for country in country_totals:
+            if (country_totals[country][0] > 0):
+                country_weights[country] = float(country_totals[country][1])/float(country_totals[country][0]) * 10
+            else:
+                country_weights[country] = 2
 
-            for city in city_totals:
-                if (city_totals[city][0] > 0):
-                    city_weights[city] = float(city_totals[city][1])/float(city_totals[city][0]) * 10
-                else:
-                    city_weights[city] = 2
+        for city in city_totals:
+            if (city_totals[city][0] > 0):
+                city_weights[city] = float(city_totals[city][1])/float(city_totals[city][0]) * 10
+            else:
+                city_weights[city] = 2
 
 ##TODO: MAKE TOTALS INTO WEIGHTS
 ### DO WEIGHTS FOR MARKET
 
-            for market in market_totals:
-                if (float(market_totals[market][0]) > 0):
-                    market_weights[market] = float(market_totals[market][1])/float(market_totals[market][0]) * 10
-                else:
-                    market_weights[market] = 2
+        for market in market_totals:
+            if (float(market_totals[market][0]) > 0):
+                market_weights[market] = float(market_totals[market][1])/float(market_totals[market][0]) * 10
+            else:
+                market_weights[market] = 2
 
 
     return comp_arr, country_weights, city_weights, market_weights

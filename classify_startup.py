@@ -36,9 +36,10 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
     print()
     print(len(distances))
     print()
-    for i in range(len(distances)):
-        for company in distances[sorted_keys[i]]:
+    while (k > 0):
+        for company in distances[sorted_keys[-k]]:
             nearest_neighbors.append(company)
+        k -= len(distances[sorted_keys[-k]])
 
     return nearest_neighbors
 
