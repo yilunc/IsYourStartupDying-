@@ -15,9 +15,24 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
     distances = {}
     for ref_company in data:
         distance = get_n_distance((company.getFunding_value(), company.getFunding_rounds()),(ref_company.getFunding_value(), ref_company.getFunding_rounds()))
-        distance *= country_weights[company.getCountry()]
-        distance *= city_weights[company.getCity()]
-        distance *= market_weights[company.getMarket()]
+        
+        if(company.getCountry() == ref_company.getCountry()):
+            distance /= country_weights[company.getCountry()]
+        else:
+            distance *= country_weights[company.getCountry()]
+
+
+        if(company.getCity() == ref_company.getCity()):
+            distance /= city_weights[company.getCity()]
+        else:
+            distance *= city_weights[company.getCity()]
+
+
+        if(company.getMarket() == ref_company.getMarket()):
+            distance /= market_weights[company.getMarket()]
+        else:
+            distance *= market_weights[company.getMarket()]
+
 
         if (distance in distances):
             distances[distance].append(ref_company)
@@ -30,10 +45,15 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
     nearest_neighbors = []
 
     index = 0
-    while (index < k):
+    while(index < k):
+        num_added = 0
         for company in distances[sorted_keys[index]]:
             nearest_neighbors.append(company)
-        index += len(distances[sorted_keys[index]])
+            num_added += 1
+            if(num_added + index >= k):
+                break
+        
+        index += num_added
 
     for neighbour in nearest_neighbors:
         print()
