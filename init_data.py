@@ -77,7 +77,7 @@ def parseData(csvfile):
     return comp_arr, country_weights, city_weights, market_weights
 
 def company_success(status):
-    if (status in ('ipo', 'acquired')):
+    if (status in ('ipo', 'acquired', 'operating')):
         return True
     return False
 
