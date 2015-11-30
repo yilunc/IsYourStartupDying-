@@ -14,7 +14,8 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
     print("    Getting " + str(k) + " nearest neighbors...")
     distances = {}
     for ref_company in data:
-        distance = get_n_distance((company.getFunding_value(), company.getFunding_rounds()),(ref_company.getFunding_value(), ref_company.getFunding_rounds()))
+        distance = get_n_distance((company.getFunding_value(), company.getFunding_rounds(), company.getFunding_per_date()),
+            (ref_company.getFunding_value(), ref_company.getFunding_rounds(), ref_company.getFunding_per_date()))
 
         if(company.getCountry() == ref_company.getCountry()):
             distance /= country_weights[company.getCountry()]
@@ -60,7 +61,7 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
         print(neighbour.getFunding_value())
         print(neighbour.getFunding_rounds())
         print(neighbour.getStatus())
-        print(neighbour.
+        print(neighbour.getFunding_per_date())
         print
     return nearest_neighbors
 
@@ -93,4 +94,4 @@ ref_data, country_weights, city_weights, market_weights = init.parseData('data.c
 print([c.getName() for c in ref_data[:10]])
 print(country_weights.values()[:10], country_weights['USA'])
 print(market_weights.values()[:10])
-print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 120, 1, 1), 3, ref_data, country_weights, city_weights, market_weights)))
+print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 12000000, 1, 500000), 3, ref_data, country_weights, city_weights, market_weights)))

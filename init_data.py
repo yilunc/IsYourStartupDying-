@@ -21,18 +21,28 @@ def parseData(csvfile):
         market_weights = {}
 
         for line in data_reader:
-            if(int(line[2]) > 50000 and (line[8] != '' and line[9] != '')):
+            if(int(line[2]) > 50000 and (line[8] != '' or line[9] != '')):
                 if(int(line[2]) > 100000):
-                    if (not line[8] or line[8] == ''):
-                        d1 = datetime.date(int(line[9][:4]), int(line[9][5:7]), int(line[9][8:10]))
+                    if (line[8] != '' and line[9] != ''):
+                        d1a = datetime.date(int(line[9][:4]), int(line[9][5:7]), int(line[9][8:10]))
+                        d1b = datetime.date(int(line[8][:4]), int(line[8][5:7]), int(line[8][8:10]))
+                        if (d1a > d1b):
+                            d1 = d1a
+                        else:
+                            d1 = d1b
                     else:
-                        d1 = datetime.date(int(line[8][:4]), int(line[8][5:7]), int(line[8][8:10]))
+                        if (not line[8] or line[8] == ''):
+                            d1 = datetime.date(int(line[9][:4]), int(line[9][5:7]), int(line[9][8:10]))
+                        else:
+                            d1 = datetime.date(int(line[8][:4]), int(line[8][5:7]), int(line[8][8:10]))
 
                     d2 = datetime.date(int(line[10][:4]), int(line[10][5:7]), int(line[10][8:10]))
 
-                    delta = d2 - d1
+                    delta = (d2 - d1).days
+                    delta = 1 if (delta == 0) else delta
+                    delta = abs(delta) if (delta < 0) else delta
 
-                    comp_arr.append(Company(line[0], line[3], line[1], line[4], line[6], line[2], line[7], delta.days))
+                    comp_arr.append(Company(line[0], line[3], line[1], line[4], line[6], line[2], line[7], int(line[2])/(float(delta) / 365.0)))
 
                 ## Country map
                 if (line[4] in country_totals):
