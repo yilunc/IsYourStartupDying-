@@ -7,6 +7,7 @@ from Company import Company
 ### Take the percentage closed vs. operating/acquired/ipo for values 50,000 - 100,000
 #### Take how much funding they got per day for everyone > 100,000
 #####
+MONEYTHRESHOLD = 800000
 def parseData(csvfile):
     with open(csvfile, 'rb') as data_file:
         next(data_file)
@@ -39,43 +40,43 @@ def parseData(csvfile):
                     d2 = datetime.date(int(line[10][:4]), int(line[10][5:7]), int(line[10][8:10]))
 
                     delta = (d2 - d1).days
-                    delta = 1 if (delta == 0) else delta
-                    delta = abs(delta) if (delta < 0) else delta
+                    delta = 1 if (delta == 0) else abs(delta)
+                    money_delta = int(line[2])/(float(delta) / 365.0)
 
-                    comp_arr.append(Company(line[0], line[3], line[1], line[4], line[6], line[2], line[7], int(line[2])/(float(delta) / 365.0)))
+                    comp_arr.append(Company(line[0], line[3], line[1], line[4], line[6], line[2], line[7], money_delta))
 
                 ## Country map
                 if (line[4] in country_totals):
-                    if (company_success(line[3])):
+                    if (company_status(line[3], money_delta)):
                         country_totals[line[4]][0] += 1
                     else:
                         country_totals[line[4]][1] += 1
                 else:
-                    if (company_success(line[3])):
+                    if (company_status(line[3], money_delta)):
                         country_totals[line[4]] = [1,0]
                     else:
                         country_totals[line[4]] = [0,1]
 
                 ## Market map
                 if (line[1] in market_totals):
-                    if (company_success(line[3])):
+                    if (company_status(line[3], money_delta)):
                         market_totals[line[1]][0] += 1
                     else:
                         market_totals[line[1]][1] += 1
                 else:
-                    if (company_success(line[3])):
+                    if (company_status(line[3], money_delta)):
                         market_totals[line[1]] = [1,0]
                     else:
                         market_totals[line[1]] = [0,1]
 
                 #City Map
                 if (line[6] in city_totals):
-                    if (company_success(line[3])):
+                    if (company_status(line[3], money_delta)):
                         city_totals[line[6]][0] += 1
                     else:
                         city_totals[line[6]][1] += 1
                 else:
-                    if (company_success(line[3])):
+                    if (company_status(line[3], money_delta)):
                         city_totals[line[6]] = [1,0]
                     else:
                         city_totals[line[6]] = [0,1]
@@ -102,8 +103,8 @@ def parseData(csvfile):
 
     return comp_arr, country_weights, city_weights, market_weights
 
-def company_success(status):
-    if (status in ('ipo', 'acquired', 'operating')):
+def company_status(status, money_delta):
+    if (status in ('ipo', 'acquired', 'operating') and money_delta > MONEYTHRESHOLD):
         return True
     return False
 

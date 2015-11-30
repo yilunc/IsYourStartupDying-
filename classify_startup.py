@@ -59,7 +59,6 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
         print
         print(neighbour.getName())
         print(neighbour.getFunding_value())
-        print(neighbour.getFunding_rounds())
         print(neighbour.getStatus())
         print(neighbour.getFunding_per_date())
         print
@@ -71,10 +70,10 @@ def get_majority(neighbors):
     print("    Getting majority")
     numA = 0
     numB = 0
-    categoryA = ('ipo', 'acquired', 'operating')
+    categoryA = ('ipo', 'acquired')
 
     for neighbor in neighbors:
-        if neighbor.getStatus() in categoryA:
+        if neighbor.getStatus() in categoryA or neighbor.getFunding_per_date() > init.MONEYTHRESHOLD:
             numA += 1
         else:
             numB += 1
@@ -94,4 +93,4 @@ ref_data, country_weights, city_weights, market_weights = init.parseData('data.c
 print([c.getName() for c in ref_data[:10]])
 print(country_weights.values()[:10], country_weights['USA'])
 print(market_weights.values()[:10])
-print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 12000000, 1, 500000), 3, ref_data, country_weights, city_weights, market_weights)))
+print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 1200, 1, 500), 3, ref_data, country_weights, city_weights, market_weights)))
