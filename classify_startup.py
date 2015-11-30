@@ -2,37 +2,40 @@ import init_data as init
 from Company import Company
 from math import sqrt
 
-##list of integers:points1, points2
+## list of integers:points1, points2
+## Returns integer distance
 def get_n_distance(points1, points2):
-    sum = 0
+    sum = 0.0
     for index in range(len(points1)):
-        sum += (points1[index] - points2[index]) ** 2
-    return sqrt(sum)
+        sum += float(points1[index] - points2[index]) ** 2
+    return float(sqrt(sum))
 
 ## Company:company List:data Dict:country_weights, market_weights
+## Returns: list of neighbors
 def get_k_neighbors(company, k, data, country_weights, city_weights, market_weights):
-    print("    Getting " + str(k) + " nearest neighbors...")
     distances = {}
     for ref_company in data:
         distance = get_n_distance((company.getFunding_value(), company.getFunding_rounds(), company.getFunding_per_date()),
-            (ref_company.getFunding_value(), ref_company.getFunding_rounds(), ref_company.getFunding_per_date()))
+                                  (ref_company.getFunding_value(), ref_company.getFunding_rounds(), ref_company.getFunding_per_date()))
 
-        if(company.getCountry() == ref_company.getCountry()):
-            distance /= country_weights[company.getCountry()]
-        else:
-            distance *= country_weights[company.getCountry()]
-
-
-        if(company.getCity() == ref_company.getCity()):
-            distance /= city_weights[company.getCity()]
-        else:
-            distance *= city_weights[company.getCity()]
+        if (company.getCountry() in country_weights):
+            if(company.getCountry() == ref_company.getCountry()):
+                distance /= country_weights[company.getCountry()]
+            else:
+                distance *= country_weights[company.getCountry()]
 
 
-        if(company.getMarket() == ref_company.getMarket()):
-            distance /= market_weights[company.getMarket()]
-        else:
-            distance *= market_weights[company.getMarket()]
+        if (company.getCity() in city_weights):
+            if(company.getCity() == ref_company.getCity()):
+                distance /= city_weights[company.getCity()]
+            else:
+                distance *= city_weights[company.getCity()]
+
+        if (company.getMarket() in market_weights):
+            if(company.getMarket() == ref_company.getMarket()):
+                distance /= market_weights[company.getMarket()]
+            else:
+                distance *= market_weights[company.getMarket()]
 
 
         if (distance in distances):
@@ -51,29 +54,27 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
         for company in distances[sorted_keys[index]]:
             nearest_neighbors.append(company)
             num_added += 1
-            if(num_added + index >= k):
+            if(index + num_added >= k):
                 break
         index += num_added
 
-    for neighbour in nearest_neighbors:
-        print
-        print(neighbour.getName())
-        print(neighbour.getFunding_value())
-        print(neighbour.getStatus())
-        print(neighbour.getFunding_per_date())
-        print
+    # for neighbour in nearest_neighbors:
+    #     print
+    #     print(neighbour.getName())
+    #     print(neighbour.getFunding_value())
+    #     print(neighbour.getStatus())
+    #     print(neighbour.getFunding_per_date())
+    #     print
     return nearest_neighbors
 
 ## list:neighbors
-## 1 == Successful, 0 == Failure, -1 == Uncertain
+## Returns: 1 == Successful, 0 == Failure, -1 == Uncertain
 def get_majority(neighbors):
-    print("    Getting majority")
     numA = 0
     numB = 0
-    categoryA = ('ipo', 'acquired')
 
     for neighbor in neighbors:
-        if neighbor.getStatus() in categoryA or neighbor.getFunding_per_date() > init.MONEYTHRESHOLD:
+        if company_status(neighbor):
             numA += 1
         else:
             numB += 1
@@ -86,11 +87,32 @@ def get_majority(neighbors):
         return 1
     return 0
 
+## Company:company
+## Returns: True == Successful False == Failure
+def company_status(company):
+    return company.getStatus() in ('ipo', 'acquired') or company.getFunding_per_date() > init.MONEYTHRESHOLD
 
-ref_data, country_weights, city_weights, market_weights = init.parseData('data.csv')
+## Start Main
+ref_data, train_data, country_weights, city_weights, market_weights = init.parseData('data.csv')
 
-## main
-print([c.getName() for c in ref_data[:10]])
-print(country_weights.values()[:10], country_weights['USA'])
-print(market_weights.values()[:10])
-print(get_majority(get_k_neighbors(Company("hello", "" , "Curated Web", "USA", "San Francisco", 1200, 1, 500), 3, ref_data, country_weights, city_weights, market_weights)))
+correct = 0
+wrong = 0
+
+total_to_test = len(train_data)
+test_num = 0
+
+# TEST PARAMETERS
+k = 3
+
+print "Running test on " + str(total_to_test) + " entries:"
+
+for company in train_data:
+    if (test_num % 100 == 0):
+        print '\t' + str(int((float(test_num)/float(total_to_test)) * 100)) + "% completed"
+    if (get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights)) == company_status(company)):
+        correct += 1
+    else:
+        wrong += 1
+    test_num += 1
+
+print str(float(correct)/float(wrong)) + "% accuracy for " + str(k) + " neighbors."
