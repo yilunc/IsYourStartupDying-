@@ -145,8 +145,8 @@ def classify(name, status, market, country, city, funding_value, funding_rounds,
     if not is_initialized():
         return -2
     #Initialize the company
-    d1 = datetime.date((int(first_round_date[:4]), int(first_round_date[5:7]), int(first_round_date[8:10]))
-    d2 = datetime.date((int(last_round_date[:4]), int(last_round_date[5:7]), int(last_round_date[8:10]))
+    d1 = datetime.date(int(first_round_date[:4]), int(first_round_date[5:7]), int(first_round_date[8:10]))
+    d2 = datetime.date(int(last_round_date[:4]), int(last_round_date[5:7]), int(last_round_date[8:10]))
     delta = (d2 - d1).days
     delta = 1 if (delta == 0) else abs(delta)
     money_delta = int(line[2])/(float(delta) / 365.0)
