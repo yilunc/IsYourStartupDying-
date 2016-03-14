@@ -1,4 +1,5 @@
 import sys
+import os.path
 import init_data as init
 from Company import Company
 from math import sqrt
@@ -94,9 +95,16 @@ def initialize():
     names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
     print "Pickling Data.."
     for i in range(len(names)):
-      with open('.{0}.pickle'.format(names[i]), 'wb') as f:
-        pickle.dump(data_structs[i], f)
+        with open('.{0}.pickle'.format(names[i]), 'wb') as f:
+          pickle.dump(data_structs[i], f)
     return ref_data, train_data, country_weights, city_weights, market_weights
+
+def is_initialized():
+    names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
+    for name in names:
+      if not os.path.exists(".{0}.pickle".format(name)):
+          return False
+    return True
 
 def test():
     print "Starting Test.."
@@ -126,8 +134,35 @@ def test():
         sys.stdout.write("{0}Progress: {1:{2}}%   Correct: {3}  Wrong: {4}".format(delete, int((float(test_num)/float(total_to_test)) * 100), digits, correct, wrong))
         sys.stdout.flush()
     if (wrong > 0):
-      print '\n' + str(float(correct)/float(total_to_test) * 100) + "% accuracy for " + str(k) + " neighbors."
+        print '\n' + str(float(correct)/float(total_to_test) * 100) + "% accuracy for " + str(k) + " neighbors."
     else:
-      print '\n' + "100% accuracy for " + str(k) + " neighbors."
+        print '\n' + "100% accuracy for " + str(k) + " neighbors."
+
+# Classifies your startup
+# Returns: 1==Successful 0==Failure -1==Uncertain -2==Error
+def classify(name, status, market, country, city, funding_value, funding_rounds, first_round_date, last_round_date, k=3):
+    #Check that the Data is initialized
+    if not is_initialized():
+        return -2
+    #Initialize the company
+    d1 = datetime.date((int(first_round_date[:4]), int(first_round_date[5:7]), int(first_round_date[8:10]))
+    d2 = datetime.date((int(last_round_date[:4]), int(last_round_date[5:7]), int(last_round_date[8:10]))
+    delta = (d2 - d1).days
+    delta = 1 if (delta == 0) else abs(delta)
+    money_delta = int(line[2])/(float(delta) / 365.0)
+    company = Company(name, status, market,country, city, funding_value, funding_rounds, money_delta)
+
+    with open('.ref_data.pickle', 'rb') as f:
+        ref_data = pickle.load(f)
+    with open('.train_data.pickle', 'rb') as f:
+        train_data = pickle.load(f)
+    with open('.country_weights.pickle', 'rb') as f:
+        country_weights = pickle.load(f)
+    with open('.city_weights.pickle', 'rb') as f:
+        city_weights = pickle.load(f)
+    with open('.market_weights.pickle', 'rb') as f:
+        market_weights = pickle.load(f)
+
+    return get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights))
 
 test()
