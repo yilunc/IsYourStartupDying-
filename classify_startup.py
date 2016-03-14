@@ -28,7 +28,6 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
             else:
                 distance *= country_weights[company.getCountry()]
 
-
         if (company.getCity() in city_weights):
             if(company.getCity() == ref_company.getCity()):
                 distance /= city_weights[company.getCity()]
@@ -41,7 +40,6 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
             else:
                 distance *= market_weights[company.getMarket()]
 
-
         if (distance in distances):
             distances[distance].append(ref_company)
         else:
@@ -49,9 +47,7 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
 
     sorted_keys = distances.keys()
     sorted_keys.sort()
-
     nearest_neighbors = []
-
     index = 0
     while (index < k):
         num_added = 0
@@ -68,15 +64,12 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
 def get_majority(neighbors):
     numA = 0
     numB = 0
-
     for neighbor in neighbors:
         if company_status(neighbor):
             numA += 1
         else:
             numB += 1
-
     diff = numA - numB
-
     if (abs(diff) < len(neighbors)*0.05):
         return -1
     elif (diff > 0):
@@ -95,36 +88,32 @@ def initialize():
     data_structs = (ref_data, train_data, country_weights, city_weights, market_weights)
     names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
     print "Pickling Data.."
-    if not os.path.exists('pickle/'):
+    if not os.path.exists('.pickle/'):
         print "No Pickle directory found, creating one.."
-        os.makedirs('pickle/')
+        os.makedirs('.pickle/')
     for i in range(len(names)):
-        with open('pickle/.{0}.pickle'.format(names[i]), 'wb') as f:
+        with open('.pickle/.{0}.pickle'.format(names[i]), 'wb') as f:
             pickle.dump(data_structs[i], f)
     return ref_data, train_data, country_weights, city_weights, market_weights
 
 def is_initialized():
     names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
     for name in names:
-      if not os.path.exists("pickle/.{0}.pickle".format(name)):
+      if not os.path.exists(".pickle/.{0}.pickle".format(name)):
           return False
     return True
 
 def test(k=9):
     print "Starting Test.."
     ref_data, train_data, country_weights, city_weights, market_weights = initialize()
-    print(market_weights.keys())
     correct = 0
     wrong = 0
-
     total_to_test = len(train_data)
     test_num = 0
-
     # PRINTING PARAMS for prettiness
     to = 100
     digits = len(str(to - 1))
     delete = "\b" * (digits + 1 + len("Progress: %   Correct: {3}  Wrong: {4}"))
-
     print "Running test on " + str(total_to_test) + " entries with " + str(k) + " neighbors:"
     for company in train_data:
         if (get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights)) == company_status(company)):
@@ -152,18 +141,16 @@ def classify(name, status, market, country, city, funding_value, funding_rounds,
     delta = 1 if (delta == 0) else abs(delta)
     money_delta = int(funding_value)/(float(delta) / 365.0)
     company = Company(name, status, market, country, city, int(funding_value), int(funding_rounds), money_delta)
-
-    with open('pickle/.ref_data.pickle', 'rb') as f:
+    with open('.pickle/.ref_data.pickle', 'rb') as f:
         ref_data = pickle.load(f)
-    with open('pickle/.train_data.pickle', 'rb') as f:
+    with open('.pickle/.train_data.pickle', 'rb') as f:
         train_data = pickle.load(f)
-    with open('pickle/.country_weights.pickle', 'rb') as f:
+    with open('.pickle/.country_weights.pickle', 'rb') as f:
         country_weights = pickle.load(f)
-    with open('pickle/.city_weights.pickle', 'rb') as f:
+    with open('.pickle/.city_weights.pickle', 'rb') as f:
         city_weights = pickle.load(f)
-    with open('pickle/.market_weights.pickle', 'rb') as f:
+    with open('.pickle/.market_weights.pickle', 'rb') as f:
         market_weights = pickle.load(f)
-
     return get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights))
 
 

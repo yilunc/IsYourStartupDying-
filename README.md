@@ -33,6 +33,4 @@ _Note:_ Multi word inputs must be surrounded by `''`
 * funding rounds: i.e `3`
 * first/last round date: Date of first and last funding, `YYYY-MM-DD`
 
-
-
 ex: `$ python classify_startup.py Generic operating 'Real Estate' USA 'San Francisco' 2000 1 2016-01-01 2016-01-01`
