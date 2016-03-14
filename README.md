@@ -14,11 +14,11 @@ Uses ML neighbor classifier algorithm to let budding entrepreneurs if their star
 98.941% using k=9.
 
 #### Usage
-######For testing:
+###### To test on training data:
 
 ```$ python classify-startup.py test {k_value}```
 
-######To classify your company:
+###### To classify your company:
 
 ```$ python classify-startup.py name status market country city funding_value funding_rounds first_round_date last_round_date {k_value}```
 
