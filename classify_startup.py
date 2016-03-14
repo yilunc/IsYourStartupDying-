@@ -94,9 +94,12 @@ def initialize():
     data_structs = (ref_data, train_data, country_weights, city_weights, market_weights)
     names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
     print "Pickling Data.."
+    if not os.path.exists('pickle/'):
+        print "No Pickle directory found, creating one.."
+        os.makedirs('pickle/')
     for i in range(len(names)):
         with open('pickle/.{0}.pickle'.format(names[i]), 'wb') as f:
-          pickle.dump(data_structs[i], f)
+            pickle.dump(data_structs[i], f)
     return ref_data, train_data, country_weights, city_weights, market_weights
 
 def is_initialized():
@@ -168,8 +171,7 @@ if (len(sys.argv) == 2):
         test()
 elif (len(sys.argv) == 3):
     if sys.argv[1] == 'test':
-        k = sys.argv[2]
-        test(k)
+        test(k=int(sys.argv[2]))
 elif (len(sys.argv) == 10):
     print(classify(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9]))
 elif (len(sys.argv) == 11):
