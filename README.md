@@ -5,7 +5,7 @@ Is it dying or nah?
 
 Uses ML neighbor classifier algorithm to let budding entrepreneurs if their startup is successful or not, just enter your company details in, cross your fingers and read your result which was calculated based on pre-existing database of over 73,000 startups.
 
-![alt tag](http://thedealnewsroom.tumblr.com/post/123030031822/quantum-energy-co-founder-you-can-make-money-at)
+![alt tag](http://33.media.tumblr.com/b5a4e7d76d422c02bd4065ef63fc5e3a/tumblr_inline_nqv4l5LKid1tn8yin_500.gif)
 
 ##### Current accuracy
 
