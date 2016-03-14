@@ -1,4 +1,5 @@
 import sys
+import datetime
 import os.path
 import init_data as init
 from Company import Company
@@ -105,13 +106,14 @@ def initialize():
 def is_initialized():
     names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
     for name in names:
-      if not os.path.exists(".{0}.pickle".format(name)):
+      if not os.path.exists("pickle/.{0}.pickle".format(name)):
           return False
     return True
 
 def test(k=9):
     print "Starting Test.."
     ref_data, train_data, country_weights, city_weights, market_weights = initialize()
+    print(market_weights.keys())
     correct = 0
     wrong = 0
 
@@ -142,7 +144,7 @@ def test(k=9):
 def classify(name, status, market, country, city, funding_value, funding_rounds, first_round_date, last_round_date, k=9):
     #Check that the Data is initialized
     if not is_initialized():
-        return -2
+        initialize()
     #Initialize the company
     d1 = datetime.date(int(first_round_date[:4]), int(first_round_date[5:7]), int(first_round_date[8:10]))
     d2 = datetime.date(int(last_round_date[:4]), int(last_round_date[5:7]), int(last_round_date[8:10]))
