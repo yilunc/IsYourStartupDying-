@@ -165,4 +165,16 @@ def classify(name, status, market, country, city, funding_value, funding_rounds,
 
     return get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights))
 
-test()
+
+## MAIN
+if (len(sys.argv) == 2):
+    if sys.argv[1] == 'test':
+       test()
+    else:
+       print("ERROR: invalid argument.")
+elif (len(sys.argv) == 10):
+    print(classify(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9]))
+elif (len(sys.argv) == 11):
+    print(classify(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9], sys.argv[10]))
+
+
