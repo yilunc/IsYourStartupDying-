@@ -14,7 +14,7 @@ Uses ML neighbor classifier algorithm to let budding entrepreneurs if their star
 98.941% using k=9.
 
 #### Usage
-###### To test on training data:
+###### To test:
 
 ```$ python classify-startup.py test {k_value}```
 
