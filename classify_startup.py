@@ -1,6 +1,8 @@
+import sys
 import init_data as init
 from Company import Company
 from math import sqrt
+import pickle
 
 ## list of integers:points1, points2
 ## Returns integer distance
@@ -57,14 +59,6 @@ def get_k_neighbors(company, k, data, country_weights, city_weights, market_weig
             if(index + num_added >= k):
                 break
         index += num_added
-
-    # for neighbour in nearest_neighbors:
-    #     print
-    #     print(neighbour.getName())
-    #     print(neighbour.getFunding_value())
-    #     print(neighbour.getStatus())
-    #     print(neighbour.getFunding_per_date())
-    #     print
     return nearest_neighbors
 
 ## list:neighbors
@@ -92,27 +86,48 @@ def get_majority(neighbors):
 def company_status(company):
     return company.getStatus() in ('ipo', 'acquired') or company.getFunding_per_date() > init.MONEYTHRESHOLD
 
-## Start Main
-ref_data, train_data, country_weights, city_weights, market_weights = init.parseData('data.csv')
+def initialize():
+    print "Initializing Data.."
+    ref_data, train_data, country_weights, city_weights, market_weights = [], [], {}, {}, {}
+    ref_data, train_data, country_weights, city_weights, market_weights = init.parseData('data.csv')
+    data_structs = (ref_data, train_data, country_weights, city_weights, market_weights)
+    names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
+    print "Pickling Data.."
+    for i in range(len(names)):
+      with open('{0}.pickle'.format(names[i]), 'wb') as f:
+        pickle.dump(data_structs[i], f)
+    return ref_data, train_data, country_weights, city_weights, market_weights
 
-correct = 0
-wrong = 0
+def test():
+    print "Starting Test.."
+    ref_data, train_data, country_weights, city_weights, market_weights = initialize()
+    correct = 0
+    wrong = 0
 
-total_to_test = len(train_data)
-test_num = 0
+    total_to_test = len(train_data)
+    test_num = 0
 
-# TEST PARAMETERS
-k = 3
+    # TEST PARAMETERS
+    k = 3
 
-print "Running test on " + str(total_to_test) + " entries:"
+    # PRINTING PARAMS for prettiness
+    to = 100
+    digits = len(str(to - 1))
+    delete = "\b" * (digits + 1 + len("Progress: %   Correct: {3}  Wrong: {4}"))
 
-for company in train_data:
-    if (test_num % 100 == 0):
-        print '\t' + str(int((float(test_num)/float(total_to_test)) * 100)) + "% completed"
-    if (get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights)) == company_status(company)):
-        correct += 1
+    print "Running test on " + str(total_to_test) + " entries:"
+    for company in train_data:
+        if (get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights)) == company_status(company)):
+            correct += 1
+        else:
+            wrong += 1
+        test_num += 1
+
+        sys.stdout.write("{0}Progress: {1:{2}}%   Correct: {3}  Wrong: {4}".format(delete, int((float(test_num)/float(total_to_test)) * 100), digits, correct, wrong))
+        sys.stdout.flush()
+    if (wrong > 0):
+      print '\n' + str(float(correct)/float(total_to_test) * 100) + "% accuracy for " + str(k) + " neighbors."
     else:
-        wrong += 1
-    test_num += 1
+      print '\n' + "100% accuracy for " + str(k) + " neighbors."
 
-print str(float(correct)/float(wrong)) + "% accuracy for " + str(k) + " neighbors."
+test()
