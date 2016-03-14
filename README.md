@@ -1,4 +1,4 @@
-# IsYourStartupDying-
+# IsYourStartupDying?
 
 ### Classifier to answer the question:
 Is it dying or nah?
