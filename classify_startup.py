@@ -109,7 +109,7 @@ def is_initialized():
           return False
     return True
 
-def test(k=5):
+def test(k=9):
     print "Starting Test.."
     ref_data, train_data, country_weights, city_weights, market_weights = initialize()
     correct = 0
@@ -139,7 +139,7 @@ def test(k=5):
 
 # Classifies your startup
 # Returns: 1==Successful 0==Failure -1==Uncertain -2==Error
-def classify(name, status, market, country, city, funding_value, funding_rounds, first_round_date, last_round_date, k=3):
+def classify(name, status, market, country, city, funding_value, funding_rounds, first_round_date, last_round_date, k=9):
     #Check that the Data is initialized
     if not is_initialized():
         return -2
@@ -148,8 +148,8 @@ def classify(name, status, market, country, city, funding_value, funding_rounds,
     d2 = datetime.date(int(last_round_date[:4]), int(last_round_date[5:7]), int(last_round_date[8:10]))
     delta = (d2 - d1).days
     delta = 1 if (delta == 0) else abs(delta)
-    money_delta = int(line[2])/(float(delta) / 365.0)
-    company = Company(name, status, market,country, city, funding_value, funding_rounds, money_delta)
+    money_delta = int(funding_value)/(float(delta) / 365.0)
+    company = Company(name, status, market, country, city, int(funding_value), int(funding_rounds), money_delta)
 
     with open('pickle/.ref_data.pickle', 'rb') as f:
         ref_data = pickle.load(f)

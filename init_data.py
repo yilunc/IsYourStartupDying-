@@ -49,7 +49,7 @@ def parseData(csvfile):
                     money_delta = int(line[2])/(float(delta) / 365.0)
 
                     if (entry_num % 50 != 0):
-                        train_data.append(Company(line[0], line[3], line[1], line[4], line[6], line[2], line[7], money_delta))
+                        train_data.append(Company(line[0], line[3], line[1], line[4], line[6], int(line[2]), int(line[7]), money_delta))
 
                         ## Country map
                         if (line[4] in country_totals):
@@ -87,7 +87,7 @@ def parseData(csvfile):
                             else:
                                 city_totals[line[6]] = [0,1]
                     else:
-                        test_data.append(Company(line[0], line[3], line[1], line[4], line[6], line[2], line[7], money_delta))
+                        test_data.append(Company(line[0], line[3], line[1], line[4], line[6], int(line[2]), int(line[7]), money_delta))
 
         for country in country_totals:
             if (country_totals[country][0] > 0):
