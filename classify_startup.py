@@ -132,7 +132,7 @@ def test(k=5):
     if (wrong > 0):
         print '\n' + str(float(correct)/float(total_to_test) * 100) + "% accuracy for " + str(k) + " neighbors."
     else:
-        print '\n' + "100% accuracy for " + str(k) + " neighbors."
+        print "\n100% accuracy for " + str(k) + " neighbors."
 
 # Classifies your startup
 # Returns: 1==Successful 0==Failure -1==Uncertain -2==Error
