@@ -25,7 +25,7 @@ _Note:_ Multi word inputs must be surrounded by `''`
 * market: i.e `'Real Estate'`, `Tourism`, `'Music Services'`
 * country: i.e `USA`, `Canada`, `'United Kingdom'`
 * city: i.e `'San Franciso'`, `London`
-* funding value: i.e `2000000` (total value to date)
+* funding value: Total value to date i.e `2000000`
 * funding rounds: i.e `3`
 * first/last round date: Date of first and last funding, `YYYY-MM-DD`
 
