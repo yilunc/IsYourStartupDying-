@@ -27,7 +27,7 @@ _Note:_ Multi word inputs must be surrounded by `''`
 * city: i.e `'San Franciso'`, `London`
 * funding value: i.e `2000000` (total value to date)
 * funding rounds: i.e `3`
-* first/last round date: Date of first and last funding: YYYY-MM-DD
+* first/last round date: Date of first and last funding, `YYYY-MM-DD`
 
 
 
