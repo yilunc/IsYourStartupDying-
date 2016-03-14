@@ -22,7 +22,7 @@ _Note:_ Multi word inputs must be surrounded by `''`
 
 * name: Company name
 * Status: `operating`, `aquired`, `ipo` or `closed`
-* market: i.e `'Real Estate'`, `'Tourism'`, `'Music Services'`
+* market: i.e `'Real Estate'`, `Tourism`, `'Music Services'`
 * country: i.e `USA`, `Canada`, `'United Kingdom'`
 * city: i.e `'San Franciso'`, `London`
 * funding value: i.e `2000000` (total value to date)
@@ -31,4 +31,4 @@ _Note:_ Multi word inputs must be surrounded by `''`
 
 
 
-ex: `python classify_startup.py Generic operating 'Real Estate' USA 'San Francisco' 2000 1 2016-01-01 2016-01-01`
+ex: `$ python classify_startup.py Generic operating 'Real Estate' USA 'San Francisco' 2000 1 2016-01-01 2016-01-01`
