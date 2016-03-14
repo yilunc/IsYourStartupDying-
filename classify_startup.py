@@ -106,7 +106,7 @@ def is_initialized():
           return False
     return True
 
-def test():
+def test(k=5):
     print "Starting Test.."
     ref_data, train_data, country_weights, city_weights, market_weights = initialize()
     correct = 0
@@ -115,22 +115,18 @@ def test():
     total_to_test = len(train_data)
     test_num = 0
 
-    # TEST PARAMETERS
-    k = 3
-
     # PRINTING PARAMS for prettiness
     to = 100
     digits = len(str(to - 1))
     delete = "\b" * (digits + 1 + len("Progress: %   Correct: {3}  Wrong: {4}"))
 
-    print "Running test on " + str(total_to_test) + " entries:"
+    print "Running test on " + str(total_to_test) + " entries with " + str(k) + " neighbors:"
     for company in train_data:
         if (get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights)) == company_status(company)):
             correct += 1
         else:
             wrong += 1
         test_num += 1
-
         sys.stdout.write("{0}Progress: {1:{2}}%   Correct: {3}  Wrong: {4}".format(delete, int((float(test_num)/float(total_to_test)) * 100), digits, correct, wrong))
         sys.stdout.flush()
     if (wrong > 0):
@@ -169,12 +165,16 @@ def classify(name, status, market, country, city, funding_value, funding_rounds,
 ## MAIN
 if (len(sys.argv) == 2):
     if sys.argv[1] == 'test':
-       test()
-    else:
-       print("ERROR: invalid argument.")
+        test()
+elif (len(sys.argv) == 3):
+    if sys.argv[1] == 'test':
+        k = sys.argv[2]
+        test(k)
 elif (len(sys.argv) == 10):
     print(classify(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9]))
 elif (len(sys.argv) == 11):
     print(classify(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9], sys.argv[10]))
+else:
+   print("ERROR: invalid argument(s).")
 
 
