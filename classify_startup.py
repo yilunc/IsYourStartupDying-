@@ -95,7 +95,7 @@ def initialize():
     names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
     print "Pickling Data.."
     for i in range(len(names)):
-        with open('.{0}.pickle'.format(names[i]), 'wb') as f:
+        with open('pickle/.{0}.pickle'.format(names[i]), 'wb') as f:
           pickle.dump(data_structs[i], f)
     return ref_data, train_data, country_weights, city_weights, market_weights
 
@@ -152,15 +152,15 @@ def classify(name, status, market, country, city, funding_value, funding_rounds,
     money_delta = int(line[2])/(float(delta) / 365.0)
     company = Company(name, status, market,country, city, funding_value, funding_rounds, money_delta)
 
-    with open('.ref_data.pickle', 'rb') as f:
+    with open('pickle/.ref_data.pickle', 'rb') as f:
         ref_data = pickle.load(f)
-    with open('.train_data.pickle', 'rb') as f:
+    with open('pickle/.train_data.pickle', 'rb') as f:
         train_data = pickle.load(f)
-    with open('.country_weights.pickle', 'rb') as f:
+    with open('pickle/.country_weights.pickle', 'rb') as f:
         country_weights = pickle.load(f)
-    with open('.city_weights.pickle', 'rb') as f:
+    with open('pickle/.city_weights.pickle', 'rb') as f:
         city_weights = pickle.load(f)
-    with open('.market_weights.pickle', 'rb') as f:
+    with open('pickle/.market_weights.pickle', 'rb') as f:
         market_weights = pickle.load(f)
 
     return get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights))
