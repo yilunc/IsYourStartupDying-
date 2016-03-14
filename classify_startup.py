@@ -94,7 +94,7 @@ def initialize():
     names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
     print "Pickling Data.."
     for i in range(len(names)):
-      with open('{0}.pickle'.format(names[i]), 'wb') as f:
+      with open('.{0}.pickle'.format(names[i]), 'wb') as f:
         pickle.dump(data_structs[i], f)
     return ref_data, train_data, country_weights, city_weights, market_weights
 
