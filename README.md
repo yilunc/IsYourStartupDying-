@@ -10,8 +10,8 @@ Current accuracy: 98.941%
 #### Usage
 For testing:
 
-* python classify-startup.py test {k_value}
+```python classify-startup.py test {k_value}```
 
 To classify your company:
 
-* python classify-startup.py name status market country city funding_value funding_rounds first_round_date last_round_date {k_value}
+```python classify-startup.py name status market country city funding_value funding_rounds first_round_date last_round_date {k_value}```
