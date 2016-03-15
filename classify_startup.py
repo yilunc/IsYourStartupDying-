@@ -89,7 +89,8 @@ def initialize():
     names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
     print "Pickling Data.."
     if not os.path.exists('.pickle/'):
-        print "No Pickle directory found, creating one.."
+        print "No Pickle directory found.."
+        print "Creating one at {0}/.pickle".format(os.getcwd())
         os.makedirs('.pickle/')
     for i in range(len(names)):
         with open('.pickle/.{0}.pickle'.format(names[i]), 'wb') as f:
@@ -114,7 +115,7 @@ def test(k=9):
     to = 100
     digits = len(str(to - 1))
     delete = "\b" * (digits + 1 + len("Progress: %   Correct: {3}  Wrong: {4}"))
-    print "Running test on " + str(total_to_test) + " entries with " + str(k) + " neighbors:"
+    print "Running test on {0} entries with k={1}:".format(total_to_test, k)
     for company in train_data:
         if (get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights)) == company_status(company)):
             correct += 1
@@ -124,9 +125,9 @@ def test(k=9):
         sys.stdout.write("{0}Progress: {1:{2}}%   Correct: {3}  Wrong: {4}".format(delete, int((float(test_num)/float(total_to_test)) * 100), digits, correct, wrong))
         sys.stdout.flush()
     if (wrong > 0):
-        print '\n' + str(float(correct)/float(total_to_test) * 100) + "% accuracy for " + str(k) + " neighbors."
+        print "\n{0}% accuracy for {1} neighbors.".format(float(correct)/float(total_to_test) * 100, k)
     else:
-        print "\n100% accuracy for " + str(k) + " neighbors."
+        print "\n100% accuracy for {1} neighbors.".format(k)
 
 # Classifies your startup
 # Returns: 1==Successful 0==Failure -1==Uncertain -2==Error
