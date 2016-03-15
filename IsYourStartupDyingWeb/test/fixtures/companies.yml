@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  status: MyString
+  market: MyString
+  country: MyString
+  city: MyString
+  funding_value: 1
+  funding_rounds: 1
+  first_round_date: MyString
+  last_round_date: MyString
+
+two:
+  name: MyString
+  status: MyString
+  market: MyString
+  country: MyString
+  city: MyString
+  funding_value: 1
+  funding_rounds: 1
+  first_round_date: MyString
+  last_round_date: MyString

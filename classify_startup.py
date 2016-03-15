@@ -83,7 +83,7 @@ def company_status(company):
 
 def initialize():
     print "Initializing Data.."
-    ref_data, train_data, country_weights, city_weights, market_weights = [], [], {}, {}, {}
+    ref_data, train_data, country_weights, city_railsweights, market_weights = [], [], {}, {}, {}
     ref_data, train_data, country_weights, city_weights, market_weights = init.parseData('data.csv')
     data_structs = (ref_data, train_data, country_weights, city_weights, market_weights)
     names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
