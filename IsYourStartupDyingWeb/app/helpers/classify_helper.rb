@@ -1,0 +1,2 @@
+module ClassifyHelper
+end
