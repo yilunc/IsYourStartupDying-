@@ -1,9 +1,4 @@
-== README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
+Is Your Startup Dying? - Rails
 
 * Ruby version
 Built with `ruby 2.2.1p85`
@@ -12,7 +7,3 @@ Add these gems:
 * gem 'simple_form'
 * gem 'devise'
 
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
