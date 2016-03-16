@@ -1,4 +1,4 @@
-Is Your Startup Dying? - Rails
+###Is Your Startup Dying? - Rails
 
 Built with `ruby 2.2.1p85`
 
