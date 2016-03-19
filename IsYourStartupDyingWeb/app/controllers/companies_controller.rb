@@ -29,7 +29,7 @@ class CompaniesController < ApplicationController
     @company = Company.new convert_company_params
     if @company.valid?
       @company.user = current_user
-      @company.classify()
+      @company.classify
       @company.save
       redirect_to action: 'index'
     else

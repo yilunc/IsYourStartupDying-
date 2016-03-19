@@ -24,7 +24,9 @@
           </div>
           <% if @companies.count > 0 %>
             <% @companies.each do |company| %>
-              <p class="animated fadeInUp delay-05s">Text will go here</p>
+              <p class="animated fadeInUp delay-05s">
+                <%= "#{company.name} #{company.classify_result}"%>
+              </p>
             <%end%>
           <% else %>
               <p class="animated fadeInUp delay-05s">You havn't entered in any companies yet! Create an entry <a href="companies/new">here.</a>
@@ -105,6 +107,7 @@
       <li><a href="../users/sign_in"> Log in </a></li>
       <li><a href="../users/sign_up"> Sign up </a></li>
     <% end %>
+    <li><a class="left bold-and-big" href="/"> Home </a></li>
     </ul>
   </body>
 </html>
