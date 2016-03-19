@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20160315222519) do
     t.integer  "funding_rounds"
     t.string   "first_round_date"
     t.string   "last_round_date"
+    t.integer  "class"
     t.integer  "user_id"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false

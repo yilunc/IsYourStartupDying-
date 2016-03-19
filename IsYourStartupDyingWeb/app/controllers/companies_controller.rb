@@ -23,9 +23,45 @@ class CompaniesController < ApplicationController
   end
 
   def create
-    @company = Company.new params[:company]
+    @company = Company.new convert_company_params
     @company.user = current_user
+    @company.classify()
     @company.save
     redirect_to action: 'index'
+  end
+
+  private
+
+# "name"=>"",
+#  "status"=>"",
+#  "market"=>"",
+#  "country"=>"",
+#  "city"=>"",
+#  "funding_value"=>"",
+#  "funding_rounds"=>"",
+#  "first_round_date(1i)"=>"2016",
+#  "first_round_date(2i)"=>"3",
+#  "first_round_date(3i)"=>"19",
+#  "last_round_date(1i)"=>"2016",
+#  "last_round_date(2i)"=>"3",
+#  "last_round_date(3i)"=>"19"
+  def convert_company_params
+    company_params = params[:company]
+
+    if company_params[:name] == nil
+      company_params[:name] = ""
+    end
+
+    {
+      :name => company_params[:name],
+      :status => company_params[:status],
+      :market => company_params[:market],
+      :country => company_params[:country],
+      :city => company_params[:city],
+      :funding_value => company_params[:funding_value],
+      :funding_rounds => company_params[:funding_rounds],
+      :first_round_date => "#{company_params["first_round_date(1i)"]}-#{company_params["first_round_date(2i)"]}-#{company_params["first_round_date(3i)"]}",
+      :last_round_date => "#{company_params["last_round_date(1i)"]}-#{company_params["last_round_date(2i)"]}-#{company_params["last_round_date(3i)"]}"
+    }
   end
 end

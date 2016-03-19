@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+    <!-- <link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'> -->
     <link href="../stylesheets/bootstrap.min.css" rel="stylesheet">
-    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- <link href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"> -->
     <link href="../stylesheets/flexslider.css" rel="stylesheet" >
     <link href="../stylesheets/styles.css" rel="stylesheet">
     <link href="../stylesheets/queries.css" rel="stylesheet">
@@ -21,7 +21,7 @@
               <h1 class="animated fadeInDown"><span>What is your Company called?</span></h1>
               <p class="animated fadeInUp delay-05s">This is super duper duper super not important.</p>
               <%= simple_form_for @company do |f| %>
-              <%= f.input :name , label:false, required: false%>
+              <%= f.input :name , label:false%>
             </div>
           </div>
         </div>
@@ -31,8 +31,8 @@
           <div class="row">
             <div class="text-center">
               <h1 class="animated fadeInDown"><span>Is your company currently operating, IPO, aquired, or closed?</span></h1>
-              <p class="animated fadeInUp delay-05s">Its gotta be one of those, its gotta.</p>
-              <%= f.input :status , label:false, collection: [:Operating, :IPO, :Aquired, :Closed], required: true%>
+              <p class="animated fadeInUp delay-05s">Its gotta be one of those, its gotta, sorry.</p>
+              <%= f.input :status , label:false, collection: [:Operating, :IPO, :Aquired, :Closed] %>
             </div>
           </div>
         </div>
@@ -43,7 +43,7 @@
             <div class="text-center">
               <h1 class="animated fadeInDown"><span>What market are you in?</span></h1>
               <p class="animated fadeInUp delay-05s">Music Services, Social Media or something else that is hopefully really cool.</p>
-              <%= f.input :market , label:false, required: true%>
+              <%= f.input :market , label:false%>
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@
               <h1 class="animated fadeInDown"><span>What country and city are you based out of?</span></h1>
               <p class="animated fadeInUp delay-05s">Country, then City that is.</p>
               <%= f.input :country , label:false%>
-              <%= f.input :city , label:false, required: true%>
+              <%= f.input :city , label:false%>
             </div>
           </div>
         </div>
@@ -66,7 +66,7 @@
             <div class="text-center">
               <h1 class="animated fadeInDown"><span>How much total funding do you have so far?</span></h1>
               <p class="animated fadeInUp delay-05s">CA$H MON3Y</p>
-              <%= f.input :funding_value , label:false, required: true%>
+              <%= f.input :funding_value , label:false%>
             </div>
           </div>
         </div>
@@ -76,8 +76,8 @@
           <div class="row">
             <div class="text-center">
               <h1 class="animated fadeInDown"><span>How many rounds have you gone through?</span></h1>
-              <p class="animated fadeInUp delay-05s">Sorry, this is a long form :/</p>
-              <%= f.input :funding_rounds , label:false, required: true%>
+              <p class="animated fadeInUp delay-05s">Sorry, this is a long form..</p>
+              <%= f.input :funding_rounds , label:false%>
             </div>
           </div>
         </div>
@@ -88,7 +88,7 @@
             <div class="text-center">
               <h1 class="animated fadeInDown"><span>When was your first round?</span></h1>
               <p class="animated fadeInUp delay-05s">Time flies by doesn't it.</p>
-              <%= f.input :funding_rounds , label:false, as: :date, required: true%>
+              <%= f.input :first_round_date , label:false, as: :date, order: [:year, :month, :day]%>
             </div>
           </div>
         </div>
@@ -99,16 +99,16 @@
             <div class="text-center">
               <h1 class="animated fadeInDown"><span>When was your last round?</span></h1>
               <p class="animated fadeInUp delay-05s">Hope it was a good one!</p>
-              <%= f.input :last_round_date , label:false, as: :date, required: true%>
+              <%= f.input :last_round_date , label:false, as: :date, order: [:year, :month, :day]%>
             </div>
           </div>
         </div>
       </section>
-      <section class="hero" id="hero">
+      <section class="hero">
         <div class="container">
           <div class="row">
             <div class="text-center">
-            <%= f.submit "Create Company", :class => "ignite-btn"%>
+            <%= f.submit "Create Company", class: "ignite-btn"%>
             <% end %>
             </div>
           </div>
@@ -129,13 +129,13 @@
       </div>
     </footer>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> -->
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/waypoints.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/scripts.js"></script>
-    <script src="js/jquery.flexslider.js"></script>
-    <script src="js/modernizr.js"></script>
+    <script src="../js/waypoints.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/scripts.js"></script>
+    <script src="../js/jquery.flexslider.js"></script>
+    <script src="../js/modernizr.js"></script>
 
 
     <style>
