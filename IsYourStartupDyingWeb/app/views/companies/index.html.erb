@@ -18,32 +18,21 @@
       <section class="hero" id="hero">
         <div class="container">
           <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-center inner">
-              <h1 class="animated fadeInDown">IS YOUR STARTUP <span>DYING?</span></h1>
-              <p class="animated fadeInUp delay-05s">Give up before its too late.</p>
+            <div class="inner-heading">
+              <h1 class="animated fadeInDown"><span>Your Companies</span></h1>
             </div>
           </div>
-        </div>
-        <div class="ignite-cta text-center">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-12">
-                <a href="../companies/new" class="ignite-btn">Classify your startup</a>
-              </div>
-            </div>
-          </div>
+          <% if @companies.count > 0 %>
+            <% @companies.each do |company| %>
+              <p class="animated fadeInUp delay-05s">Text will go here</p>
+            <%end%>
+          <% else %>
+              <p class="animated fadeInUp delay-05s">You havn't entered in any companies yet! Create an entry <a href="companies/new">here.</a>
+              </p>
+          <% end %>
         </div>
       </section>
     </header>
-    <section class="swag text-center">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-              <h1>Your Companies</h1>
-            </div>
-          </div>
-        </div>
-    </section>
     <footer>
       <div class="container">
         <div class="row">
@@ -111,7 +100,6 @@
     <% if current_user %>
       <li><a href="../users/sign_out">Sign out</a></li>
       <li><a href="#thing1">My Account</a></li>
-      <li><a href="#thing2">My Companies</a></li>
       <li><b href="#"> Welcome <%= current_user.email %></b></li>
     <% else %>
       <li><a href="../users/sign_in"> Log in </a></li>
