@@ -10,7 +10,7 @@ class CreateCompanies < ActiveRecord::Migration
       t.integer :funding_rounds
       t.string :first_round_date
       t.string :last_round_date
-      t.integer :class
+      t.integer :classify_result
       t.references :user
 
       t.timestamps null: false

@@ -9,6 +9,9 @@ class CompaniesController < ApplicationController
   # t.string :first_round_date
   # t.string :last_round_date
 
+  def home
+  end
+
   def index
     if current_user
       @user_email = current_user.email
@@ -24,27 +27,18 @@ class CompaniesController < ApplicationController
 
   def create
     @company = Company.new convert_company_params
-    @company.user = current_user
-    @company.classify()
-    @company.save
-    redirect_to action: 'index'
+    if @company.valid?
+      @company.user = current_user
+      @company.classify()
+      @company.save
+      redirect_to action: 'index'
+    else
+      redirect_to :back
+    end
   end
 
   private
 
-# "name"=>"",
-#  "status"=>"",
-#  "market"=>"",
-#  "country"=>"",
-#  "city"=>"",
-#  "funding_value"=>"",
-#  "funding_rounds"=>"",
-#  "first_round_date(1i)"=>"2016",
-#  "first_round_date(2i)"=>"3",
-#  "first_round_date(3i)"=>"19",
-#  "last_round_date(1i)"=>"2016",
-#  "last_round_date(2i)"=>"3",
-#  "last_round_date(3i)"=>"19"
   def convert_company_params
     company_params = params[:company]
 
