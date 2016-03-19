@@ -23,19 +23,9 @@ class CompaniesController < ApplicationController
   end
 
   def create
-    @company = Company.new company_params
+    @company = Company.new params[:company]
     @company.user = current_user
     @company.save
     redirect_to action: 'index'
-  end
-
-  def update
-
-  end
-
-  private
-
-  def company_params
-    params.require(:name).require(:status).require(:market).require(:country).require(:city).require(:funding_value).require(:funding_rounds).require(:first_round_date).require(:last_round_date)
   end
 end
