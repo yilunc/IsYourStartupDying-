@@ -19,7 +19,7 @@
         <div class="container">
           <div class="row">
             <div class="inner-heading">
-              <h1 class="animated fadeInDown"><span>Your Companies</span></h1>
+              <h1 class="animated fadeInDown"><span>My Companies</span></h1>
             </div>
           </div>
           <% if @companies.count > 0 %>
@@ -70,9 +70,6 @@
         width: 100%;
         opacity: 0.7;
       }
-      li {
-        float: right;
-      }
       li a {
         display: block;
         color: #000;
@@ -80,7 +77,6 @@
         padding: 14px 16px;
         text-decoration: none;
       }
-
       li b {
         font-weight: lighter;
         display: block;
@@ -89,23 +85,32 @@
         padding: 14px 16px;
         text-decoration: none;
       }
-
       li a:hover:not(.active) {
         background-color: #fff;
       }
       .active {
         background-color: #40bc86;
       }
+      .left {
+        float: left;
+      }
+      .right {
+        float: right;
+      }
+      .bold-and-big {
+        font-weight: bolder;
+        font-size: 15px;
+      }
     </style>
 
     <ul>
     <% if current_user %>
-      <li><a href="../users/sign_out">Sign out</a></li>
-      <li><a href="#thing1">My Account</a></li>
-      <li><b href="#"> Welcome <%= current_user.email %></b></li>
+      <li><a class="right" href="../users/sign_out">Sign out</a></li>
+      <li><a class="right" href="#thing1">My Account</a></li>
+      <li><b class="right" href="#"> Welcome <%= current_user.email %></b></li>
     <% else %>
-      <li><a href="../users/sign_in"> Log in </a></li>
-      <li><a href="../users/sign_up"> Sign up </a></li>
+      <li><a class="right" href="../users/sign_in"> Log in </a></li>
+      <li><a class="right" href="../users/sign_up"> Sign up </a></li>
     <% end %>
     <li><a class="left bold-and-big" href="/"> Home </a></li>
     </ul>
