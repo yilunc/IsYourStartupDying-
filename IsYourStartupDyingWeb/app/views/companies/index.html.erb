@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Is YourStartupDying? - by Yilun Chen and Ben Bogusat.</title>
+    <title>IYSD? - My Companies</title>
     <link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
     <link href="../stylesheets/bootstrap.min.css" rel="stylesheet">
     <link href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
@@ -25,7 +25,16 @@
           <% if @companies.count > 0 %>
             <% @companies.each do |company| %>
               <p class="animated fadeInUp delay-05s">
-                <%= "#{company.name} #{company.classify_result}"%>
+                <a href="companies/<%=company.id%>"><%= "#{company.name}"%>:</a>
+                <% if company.classify_result == 1 %>
+                  Successful
+                <% elsif company.classify_result == 0 %>
+                  Failure
+                <% elsif company.classify_result == -1 %>
+                  Unable to classify (result was uncertain)
+                <% else %>
+                  Unable to classify (error)
+                <% end %>
               </p>
             <%end%>
           <% else %>

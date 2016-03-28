@@ -188,6 +188,9 @@ h2::after { content: " "; border: solid 2px #3dc9b3; display: block; width: 35px
 .nopadding { padding: 0; }
 .inner { padding-top: 170px; }
 .inner-heading { padding-top: 60px; }
+.red {}
+.green {}
+.blue {}
 /* ==========================================================================
 Navigation
 ========================================================================== */
