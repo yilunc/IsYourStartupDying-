@@ -81,6 +81,8 @@ def get_majority(neighbors):
 def company_status(company):
     return company.getStatus() in ('ipo', 'acquired') or company.getFunding_per_date() > init.MONEYTHRESHOLD
 
+## -
+## Returns: all dictionaries for classification and verification.
 def initialize():
     print "Initializing Data.."
     ref_data, train_data, country_weights, city_railsweights, market_weights = [], [], {}, {}, {}
@@ -97,6 +99,8 @@ def initialize():
             pickle.dump(data_structs[i], f)
     return ref_data, train_data, country_weights, city_weights, market_weights
 
+## -
+## Returns: True == initialized data, False == uninitialized data
 def is_initialized():
     names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
     for name in names:
@@ -104,6 +108,8 @@ def is_initialized():
           return False
     return True
 
+## k: integer
+## Returns: console print out of test results on k neighbors.
 def test(k=9):
     print "Starting Test.."
     ref_data, train_data, country_weights, city_weights, market_weights = initialize()

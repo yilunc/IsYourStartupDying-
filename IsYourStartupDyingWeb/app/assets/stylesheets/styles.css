@@ -187,10 +187,6 @@ h2::after { content: " "; border: solid 2px #3dc9b3; display: block; width: 35px
 .wrapper { height: 650px; }
 .nopadding { padding: 0; }
 .inner { padding-top: 170px; }
-.inner-heading { padding-top: 60px; }
-.red {}
-.green {}
-.blue {}
 /* ==========================================================================
 Navigation
 ========================================================================== */
@@ -236,7 +232,7 @@ CTA
 .ignite-cta {padding: 70px 0; }
 .ignite-btn-back { background: url('images/hippie.jpg') no-repeat center center; opacity: 0.5; padding: 25px 40px;}
 .ignite-btn { display: inline-block; padding: 25px 40px; color: #000; border: solid 1px #000; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
-.ignite-btn:hover, .ignite-btn:focus { color: #ec555c; border: solid 1px #ec555c; }
+.ignite-btn:hover, .ignite-btn:focus { color: #40bc86; border: solid 1px #40bc86; }
 /* ==========================================================================
 Footer
 ========================================================================== */
