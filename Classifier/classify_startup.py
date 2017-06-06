@@ -2,107 +2,130 @@ import sys
 import datetime
 import os.path
 import init_data as init
-from Company import Company
+import cPickle
+import argparse
 from math import sqrt
-import pickle
+from operator import itemgetter
+from Company import Company
+
 
 ## list of integers:points1, points2
 ## Returns integer distance
+# TODO : abs(X-Y) / X+Y
+# UNLESS X+Y = 0.
+# Gives you the difference in % of the total of both
+DATE_SCALE = 365*5
 def get_n_distance(points1, points2):
     sum = 0.0
     for index in range(len(points1)):
-        sum += float(points1[index] - points2[index]) ** 2
-    return float(sqrt(sum))
+        diff = 1
+        if points1[index] is not None and points2[index] is not None:
+            diff = abs(points1[index] - points2[index])
+
+            if isinstance(points1[index], datetime.date):
+                scale = 1
+                if diff.days < DATE_SCALE:
+                    scale = float(diff.days/DATE_SCALE)
+                sum += scale
+            else:
+                try:
+                    sum += float(diff/(points1[index] + points2[index]))
+                except ZeroDivisionError:
+                    pass
+        else:
+            sum += diff
+
+        # Both X and Y should be positive. Only 0 would be X = 0 and Y = 0
+
+
+    return sum
 
 ## Company:company List:data Dict:country_weights, market_weights
 ## Returns: list of neighbors
 def get_k_neighbors(company, k, data, country_weights, city_weights, market_weights):
-    distances = {}
+    k_neighbours = []
     for ref_company in data:
-        distance = get_n_distance((company.getFunding_value(), company.getFunding_rounds(), company.getFunding_per_date()),
-                                  (ref_company.getFunding_value(), ref_company.getFunding_rounds(), ref_company.getFunding_per_date()))
 
-        if (company.getCountry() in country_weights):
-            if(company.getCountry() == ref_company.getCountry()):
-                distance /= country_weights[company.getCountry()]
-            else:
-                distance *= country_weights[company.getCountry()]
+        # Gets the distance based on anything numerical
+        distance = get_n_distance(company.get_numerical_points(), \
+        ref_company.get_numerical_points())
 
-        if (company.getCity() in city_weights):
-            if(company.getCity() == ref_company.getCity()):
-                distance /= city_weights[company.getCity()]
-            else:
-                distance *= city_weights[company.getCity()]
+        if(company.country == ref_company.country):
+            distance *= country_weights[ref_company.country]
 
-        if (company.getMarket() in market_weights):
-            if(company.getMarket() == ref_company.getMarket()):
-                distance /= market_weights[company.getMarket()]
-            else:
-                distance *= market_weights[company.getMarket()]
+        if(company.city == ref_company.city):
+            distance *= city_weights[ref_company.city]
 
-        if (distance in distances):
-            distances[distance].append(ref_company)
+        if(company.market == ref_company.market):
+            distance *= market_weights[ref_company.market]
+
+        if len(k_neighbours) >= k:
+            if (distance < k_neighbours[k-1][0]):
+                k_neighbours[k-1] = (distance,ref_company)
+                k_neighbours.sort(key=itemgetter(0))
         else:
-            distances[distance] = [ref_company]
+            k_neighbours.append((distance,ref_company))
 
-    sorted_keys = distances.keys()
-    sorted_keys.sort()
-    nearest_neighbors = []
-    index = 0
-    while (index < k):
-        num_added = 0
-        for company in distances[sorted_keys[index]]:
-            nearest_neighbors.append(company)
-            num_added += 1
-            if(index + num_added >= k):
-                break
-        index += num_added
-    return nearest_neighbors
+    return k_neighbours
 
 ## list:neighbors
 ## Returns: 1 == Successful, 0 == Failure, -1 == Uncertain
-def get_majority(neighbors):
-    numA = 0
-    numB = 0
+def success_rate(neighbors):
+    num_successful = 0
+    num_failures = 0
     for neighbor in neighbors:
-        if company_status(neighbor):
-            numA += 1
+        if neighbor[1].successful:
+            num_successful += 1
         else:
-            numB += 1
-    diff = numA - numB
-    if (abs(diff) < len(neighbors)*0.05):
-        return -1
-    elif (diff > 0):
-        return 1
-    return 0
+            num_failures += 1
+    diff = num_successful - num_failures
+    # Has to have a diff
+    sureness = float(num_successful/len(neighbors))
 
-## Company:company
-## Returns: True == Successful False == Failure
-def company_status(company):
-    return company.getStatus() in ('ipo', 'acquired') or company.getFunding_per_date() > init.MONEYTHRESHOLD
+    # At least 65% of results one way
+    if sureness < 0.35 or sureness > 0.65:
+        if diff > 0:
+            return 1
+        else:
+            return 0
+
+    # Return unsure doesn't fall into the acceptable results range
+    return -1
 
 ## -
 ## Returns: all dictionaries for classification and verification.
 def initialize():
     print "Initializing Data.."
-    ref_data, train_data, country_weights, city_railsweights, market_weights = [], [], {}, {}, {}
-    ref_data, train_data, country_weights, city_weights, market_weights = init.parseData('data.csv')
-    data_structs = (ref_data, train_data, country_weights, city_weights, market_weights)
-    names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
+    ref_data, test_data, country_weights, city_weights, market_weights = [], [], {}, {}, {}
+    ref_data, test_data, country_weights, city_weights, market_weights = init.parseData('analytics_2')
+
+    data_structs = (country_weights, city_weights, market_weights)
+    iter_data = (ref_data,test_data)
+
+    names = ('country_weights', 'city_weights', 'market_weights')
+    iter_names = ('ref_data','test_data')
+
     print "Pickling Data.."
     if not os.path.exists('.pickle/'):
         print "No Pickle directory found.."
         print "Creating one at {0}/.pickle".format(os.getcwd())
         os.makedirs('.pickle/')
+
     for i in range(len(names)):
         with open('.pickle/.{0}.pickle'.format(names[i]), 'wb') as f:
-            pickle.dump(data_structs[i], f)
-    return ref_data, train_data, country_weights, city_weights, market_weights
+            cPickle.dump(data_structs[i], f, protocol=cPickle.HIGHEST_PROTOCOL)
+
+    for i in range(len(iter_names)):
+        with open('.pickle/.{0}.pickle'.format(iter_names[i]), 'wb') as f:
+            for data in iter_data[i]:
+                cPickle.dump(data,f,protocol=cPickle.HIGHEST_PROTOCOL)
+
+    return 1
 
 ## -
 ## Returns: True == initialized data, False == uninitialized data
 def is_initialized():
-    names = ('ref_data', 'train_data', 'country_weights', 'city_weights', 'market_weights')
+    names = ('ref_data', 'test_data', 'country_weights', 'city_weights', 'market_weights')
     for name in names:
       if not os.path.exists(".pickle/.{0}.pickle".format(name)):
           return False
@@ -112,67 +135,130 @@ def is_initialized():
 ## Returns: console print out of test results on k neighbors.
 def test(k=9):
     print "Starting Test.."
-    ref_data, train_data, country_weights, city_weights, market_weights = initialize()
+    initialize()
+
+    test_data = load_in('.pickle/.test_data.pickle')
+
     correct = 0
     wrong = 0
-    total_to_test = len(train_data)
-    test_num = 0
+    total_tested = 0
     # PRINTING PARAMS for prettiness
     to = 100
     digits = len(str(to - 1))
-    delete = "\b" * (digits + 1 + len("Progress: %   Correct: {3}  Wrong: {4}"))
-    print "Running test on {0} entries with k={1}:".format(total_to_test, k)
-    for company in train_data:
-        if (get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights)) == company_status(company)):
+    delete = "\b" * (digits + 1 + len("Correct: {3}  Wrong: {4}"))
+
+    for company in test_data:
+        if classify(company, k) == company.successful:
             correct += 1
         else:
             wrong += 1
-        test_num += 1
-        sys.stdout.write("{0}Progress: {1:{2}}%   Correct: {3}  Wrong: {4}".format(delete, int((float(test_num)/float(total_to_test)) * 100), digits, correct, wrong))
-        sys.stdout.flush()
+
+        total_tested += 1
+        print "Accuracy: {0}%  Correct: {1}  Wrong: {2}".format(float(correct)/float(wrong+correct) * 100, correct,wrong)
+        #sys.stdout.write("{0}Correct: {1}  Wrong: {2}".format(delete, correct, wrong))
+        #sys.stdout.flush()
+
+    print "Tested {0} entries with k={2}:".format(total_to_test, k)
     if (wrong > 0):
         print "\n{0}% accuracy for {1} neighbors.".format(float(correct)/float(total_to_test) * 100, k)
     else:
-        print "\n100% accuracy for {1} neighbors.".format(k)
+        print "\n100% accuracy for {0} neighbors.".format(k)
 
 # Classifies your startup
 # Returns: 1==Successful 0==Failure -1==Uncertain -2==Error
-def classify(name, status, market, country, city, funding_value, funding_rounds, first_round_date, last_round_date, k=9):
+def classify(company, k = 9):
     #Check that the Data is initialized
-    if not is_initialized():
-        initialize()
-    #Initialize the company
-    d1 = datetime.date(int(first_round_date[:4]), int(first_round_date[5:7]), int(first_round_date[8:10]))
-    d2 = datetime.date(int(last_round_date[:4]), int(last_round_date[5:7]), int(last_round_date[8:10]))
-    delta = (d2 - d1).days
-    delta = 1 if (delta == 0) else abs(delta)
-    money_delta = int(funding_value)/(float(delta) / 365.0)
-    company = Company(name, status, market, country, city, int(funding_value), int(funding_rounds), money_delta)
-    with open('.pickle/.ref_data.pickle', 'rb') as f:
-        ref_data = pickle.load(f)
-    with open('.pickle/.train_data.pickle', 'rb') as f:
-        train_data = pickle.load(f)
+    #TODO: CHANGE THIS SO INPUT MATCHES ACTUAL COMPANY FORMAT
+
+    ref_data, country_weights, city_weights, market_weights = grab_files()
+
+    print("Crunching numbers. . .")
+    comparable_companies = get_k_neighbors(company,k,ref_data,country_weights,\
+    city_weights,market_weights)
+    for data in comparable_companies:
+        company = data[1]
+        print(company.name,company.status,company.market,company.country,\
+        company.city,company.founded,company.relationships, company.invest_rounds,\
+        company.first_invest,company.last_invest,company.funding_rounds,\
+        company.funding_total,company.first_funding,company.last_funding,
+        company.successful)
+    return success_rate(comparable_companies)
+
+def grab_files():
+    print("Opening pickles. . .")
+
+    ref_data = load_in('.pickle/.ref_data.pickle')
+
     with open('.pickle/.country_weights.pickle', 'rb') as f:
-        country_weights = pickle.load(f)
+        country_weights = cPickle.load(f)
     with open('.pickle/.city_weights.pickle', 'rb') as f:
-        city_weights = pickle.load(f)
+        city_weights = cPickle.load(f)
     with open('.pickle/.market_weights.pickle', 'rb') as f:
-        market_weights = pickle.load(f)
-    return get_majority(get_k_neighbors(company, k, ref_data, country_weights, city_weights, market_weights))
+        market_weights = cPickle.load(f)
+    return ref_data, country_weights, city_weights, market_weights
 
-
+# Generator to iter through pickle
+def load_in(f_name):
+    with open(f_name, "rb") as f:
+        while True:
+            try:
+                yield cPickle.load(f)
+            except EOFError:
+                break
 ## MAIN
-if (len(sys.argv) == 2):
-    if sys.argv[1] == 'test':
-        test()
-elif (len(sys.argv) == 3):
-    if sys.argv[1] == 'test':
-        test(k=int(sys.argv[2]))
-elif (len(sys.argv) == 10):
-    print(classify(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9]))
-elif (len(sys.argv) == 11):
-    print(classify(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9], k=int(sys.argv[10])))
-else:
-   print("ERROR: invalid argument(s).")
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-test', action="store_true")
+    parser.add_argument('-clean', action='store_true')
+    parser.add_argument('-n', type=str)
+    parser.add_argument('-s', type=str)
+    parser.add_argument('-m', type=str)
+    parser.add_argument('-co', type=str)
+    parser.add_argument('-ci', type=str)
+    parser.add_argument('-fo', type=str)
+    parser.add_argument('-r', type=int)
+    parser.add_argument('-ir', type=str)
+    parser.add_argument('-fi', type=str)
+    parser.add_argument('-li', type=str)
+    parser.add_argument('-fr', type=int)
+    parser.add_argument('-ft', type=float)
+    parser.add_argument('-ff', type=str)
+    parser.add_argument('-lf', type=str)
+    parser.add_argument('-k', type=int, default=9)
+    args = parser.parse_args()
 
+    if args.test:
+        test(args.k)
+    else:
+        if (not is_initialized()) or args.clean:
+            initialize()
 
+        date_inputs = [args.fi,args.li,args.ff,args.lf,args.fo]
+        i = 0
+        while i <  len(date_inputs):
+            if date_inputs[i]:
+                date_inputs[i] = datetime.date(int(date_inputs[i][:4]), \
+                int(date_inputs[i][5:7]), int(date_inputs[i][8:10]))
+            i += 1
+
+        company = Company(args.n,args.s,args.m,args.co,args.ci, date_inputs[4], \
+        args.r, args.ir, date_inputs[0], date_inputs[1], \
+        args.fr, args.ft, date_inputs[2], date_inputs[3])
+
+        print(classify(company,args.k))
+
+if __name__ == '__main__':
+    main()
+
+# if (len(sys.argv) == 2):
+#     if sys.argv[1] == 'test':
+#         test()
+# elif (len(sys.argv) == 3):
+#     if sys.argv[1] == 'test':
+#         test(k=int(sys.argv[2]))
+# elif (len(sys.argv) == 10):
+#     print(classify(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9]))
+# elif (len(sys.argv) == 11):
+#     print(classify(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8], sys.argv[9], k=int(sys.argv[10])))
+# else:
+#    print("ERROR: invalid argument(s).")
